@@ -23,7 +23,6 @@ const Login = () => {
     try {
       const result = await dispatch(loginUserAction(formData)).unwrap();
       if (result?.success) {
-        console.log(result);
         const token = result.token;
         axios.defaults.withCredentials = true;
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
