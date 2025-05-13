@@ -1,70 +1,115 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-//initial state
+// initial state
 const initialState = {
-  isLoading: true,
+  isLoading: false,
   isAuthenticated: false,
   user: null,
+  error: null, // Store error messages
 };
 
-//signup
+// signup action
 export const signupUserAction = createAsyncThunk(
   "/api/signup",
-  async (formData) => {
-    const res = await axios.post(
-      "http://localhost:3000/api/auth/signup",
-      formData,
-      { withCredentials: true }
-    );
-    return res.data;
+  async (formData, thunkAPI) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8003/api/auth/signup",
+        formData,
+        { withCredentials: true }
+      );
+      return res.data; // On success, returns the user data
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.success || "Signup failed"
+      );
+    }
   }
 );
 
-//login
+// login action
 export const loginUserAction = createAsyncThunk(
   "/api/login",
-  async (formData) => {
-    const res = await axios.post(
-      "http://localhost:3000/api/auth/login",
-      formData,
-      { withCredentials: true }
-    );
-    return res.data;
+  async (formData, thunkAPI) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8003/api/auth/login",
+        formData,
+        { withCredentials: true }
+      );
+      return res.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Login failed"
+      );
+    }
   }
 );
 
-//creating the slice
+// logout action
+export const logoutUserAction = createAsyncThunk("/api/logout", async () => {
+  const res = await axios.post(
+    "http://localhost:8003/api/auth/logout",
+    {},
+    { withCredentials: true }
+  );
+  return res.data;
+});
+
+// creating the slice
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state, actions) => {},
+    setUser: () => {},
   },
   extraReducers: (builder) => {
     builder
+      // Signup action
       .addCase(signupUserAction.pending, (state) => {
         state.isLoading = true;
+        state.error = null; // Reset error when starting request
       })
-      .addCase(signupUserAction.fulfilled, (state) => {
+      .addCase(signupUserAction.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = false; // Authentication is false after signup until login
+        state.user = action.payload.user;
+      })
+      .addCase(signupUserAction.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
+        state.error = action.payload; // Capture error message
       })
-      .addCase(signupUserAction.rejected, (state) => {
-        state.isLoading = false;
-        state.isAuthenticated = false;
-        state.user = null;
-      })
+
+      // Login action
       .addCase(loginUserAction.pending, (state) => {
         state.isLoading = true;
+        state.error = null; // Reset error when starting request
       })
       .addCase(loginUserAction.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isAuthenticated = action.payload.success;
-        state.user = !action.payload.success ? action.payload.user : null;
+        state.isAuthenticated = action.payload.success; // Only set to true if success
+        state.user = action.payload.success ? action.payload.user : null;
       })
-      .addCase(loginUserAction.rejected, (state) => {
+      .addCase(loginUserAction.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.error = action.payload; // Capture login failure error message
+      })
+
+      // Logout action
+      .addCase(logoutUserAction.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(logoutUserAction.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+      .addCase(logoutUserAction.rejected, (state) => {
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;

@@ -1,4 +1,4 @@
-const registerFormControls = [
+export const signupFormControls = [
   {
     name: "name",
     label: "Fullname",
@@ -21,4 +21,22 @@ const registerFormControls = [
     type: "password",
   },
 ];
-export default registerFormControls;
+
+const loginFormControls = [
+  {
+    name: "email",
+    label: "Email",
+    placeholder: "Enter your email...",
+    componentType: "input",
+    type: "email",
+  },
+  {
+    name: "password",
+    label: "Password",
+    placeholder: "Enter your password...",
+    componentType: "input",
+    type: "password",
+  },
+];
+
+export default loginFormControls;

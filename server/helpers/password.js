@@ -7,3 +7,5 @@ export const hashPassword = async (password, salt = 12) => {
 const validatePassword = async (currentPassword, newPassword) => {
   return bcrypt.compare(currentPassword, newPassword);
 };
+
+export default validatePassword;

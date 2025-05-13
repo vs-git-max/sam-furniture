@@ -9,13 +9,14 @@ import connectToDb from "./database/db.js";
 import authRouters from "./routers/auth.router.js";
 
 //creating the app
+dotenv.config();
 const app = express();
 
 //port
 const PORT = process.env.PORT || 3000;
 
 //using dependencies
-dotenv.config();
+app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({

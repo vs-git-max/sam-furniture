@@ -1,11 +1,12 @@
-import { validateEmail } from "../../helpers/email";
-import { hashPassword } from "../../helpers/password";
-import User from "../../models/userModel";
+import { validateEmail } from "../../helpers/email.js";
+import { hashPassword } from "../../helpers/password.js";
+import User from "../../models/userModel.js";
 
 const signup = async (req, res) => {
   try {
     const { email, password, name } = req.body;
 
+    // Check if all fields are present
     if (!email || !password || !name) {
       return res.status(400).json({
         success: false,
@@ -13,6 +14,7 @@ const signup = async (req, res) => {
       });
     }
 
+    // Validate email format
     const isEmailValid = validateEmail(email);
     if (!isEmailValid) {
       return res
@@ -20,35 +22,40 @@ const signup = async (req, res) => {
         .json({ success: false, message: "Enter a valid email format." });
     }
 
-    const hashedPassword = await hashPassword(password, 12);
-
-    const isUser = User.findOne({ email });
-
+    // Check if the email is already taken
+    const isUser = await User.findOne({ email }); // Make this call async by using await
     if (isUser) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
-        message: "Marching details please add unique ones or proceed to login",
+        message: "User already exists with this email.",
       });
     }
 
+    // Hash the password
+    const hashedPassword = await hashPassword(password, 12);
+
+    // Create the new user
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
     });
 
+    // Save the user in the database
     await newUser.save();
 
+    // Respond with success
     res.status(200).json({
-      message: "User signed up success",
+      message: "User signed up successfully",
       success: true,
     });
   } catch (error) {
-    console.log("Error in the signup controller");
+    console.log(`Error in the signup controller ${error.message}`);
     res.status(500).json({
       success: false,
       error: "Internal server error",
     });
   }
 };
+
 export default signup;

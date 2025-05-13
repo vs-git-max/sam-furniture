@@ -28,6 +28,7 @@ const Form = ({
       case "input":
         element = (
           <Input
+            className="py-2 text-md font-medium"
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
             value={value}
@@ -110,13 +111,17 @@ const Form = ({
     <form onSubmit={onSubmit}>
       <div className="flex flex-col gap-4">
         {formControls.map((item) => (
-          <div key={item.name} className="grid w-full gap-1.5">
+          <div key={item.name} className="grid w-full gap-4">
             <Label className="mb-1.5">{item.label}</Label>
             {renderComponentByInputType(item)}
           </div>
         ))}
       </div>
-      <Button className="mt-2 w-full" type="submit" disabled={isBtnDisabled}>
+      <Button
+        className="mt-2 w-full cursor-pointer bg-background hover:bg-foreground text-yellow-600"
+        type="submit"
+        disabled={isBtnDisabled}
+      >
         {buttonText || "Submit"}
       </Button>
     </form>
