@@ -1,7 +1,6 @@
 import { validateEmail } from "../../helpers/email.js";
 import User from "../../models/userModel.js";
 import validatePassword from "../../helpers/password.js";
-import jwt from "jsonwebtoken";
 import generateTokenAndSetCookie from "../../helpers/generateToken.js";
 
 const login = async (req, res) => {

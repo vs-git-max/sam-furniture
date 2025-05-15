@@ -57,6 +57,22 @@ export const logoutUserAction = createAsyncThunk("/api/logout", async () => {
   return res.data;
 });
 
+//checking auth
+export const checkAuthUserAction = createAsyncThunk(
+  "/auth/checkAuth",
+  async () => {
+    const res = await axios.get("http://localhost:8003/api/auth/check-auth", {
+      withCredentials: true,
+      headers: {
+        "Cache-control": "no-store, no-cache,must-validate,proxy-revalidate",
+        Expires: "0",
+      },
+    });
+
+    return res.data;
+  }
+);
+
 // creating the slice
 const authSlice = createSlice({
   name: "auth",
@@ -110,6 +126,21 @@ const authSlice = createSlice({
         state.user = null;
       })
       .addCase(logoutUserAction.rejected, (state) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+
+      //check auth
+      .addCase(checkAuthUserAction.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(checkAuthUserAction.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+      .addCase(checkAuthUserAction.rejected, (state) => {
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
