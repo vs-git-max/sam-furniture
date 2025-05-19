@@ -1,13 +1,15 @@
 import { navItems } from "@/components/helper";
 import { Button } from "@/components/ui/button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUserAction } from "@/components/store/auth/auth.slice";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ isAuthenticated, user }) => {
-  console.log(isAuthenticated, user);
+const Navbar = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
+
+  console.log("Is Auth", isAuthenticated, "User", user);
 
   const dispatch = useDispatch();
 
@@ -17,6 +19,17 @@ const Navbar = ({ isAuthenticated, user }) => {
 
   const handleUserLogin = () => {
     navigate("/auth/login");
+  };
+
+  const splitName = (fullName) => {
+    const dividedName = fullName.split(" ");
+
+    const firstName = dividedName[0] || " ";
+    const lastName = dividedName[1] || " ";
+
+    const initials = (firstName[0] + lastName[0]).toUpperCase();
+
+    return initials;
   };
 
   return (
@@ -36,16 +49,11 @@ const Navbar = ({ isAuthenticated, user }) => {
       <div className="flex items-center justify-between gap-3">
         {isAuthenticated && (
           <div className="flex items-center gap-1  cursor-pointer">
-            <div className="border-2 rounded-full size-12 bg-gray-600 border-yellow-600 overflow-hidden">
-              <img
-                src={user?.image}
-                alt={user?.name}
-                className="object-cover"
-              />
+            <div className="border-2 rounded-full size-12 bg-gray-600 border-yellow-600 overflow-hidden flex items-center justify-center">
+              <h5 className="text-sm text-yellow-600 font-bold">
+                {splitName(user?.name)}
+              </h5>
             </div>
-            <h5 className="text-sm text-yellow-600 font-bold">
-              {user?.name.slice(0, 2).capitalize()}
-            </h5>
           </div>
         )}
 

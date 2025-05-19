@@ -30,7 +30,7 @@ const login = async (req, res) => {
         .status(401)
         .json({ success: false, message: "Invalid password" });
 
-    generateTokenAndSetCookie(user._id, res);
+    const token = generateTokenAndSetCookie(user._id, res);
 
     return res.status(200).json({
       success: true,
@@ -40,6 +40,7 @@ const login = async (req, res) => {
         role: user.role,
         id: user._id,
       },
+      token,
     });
   } catch (error) {
     console.log(`Error in the login  ${error}`);

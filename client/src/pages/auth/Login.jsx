@@ -24,10 +24,8 @@ const Login = () => {
     try {
       const result = await dispatch(loginUserAction(formData)).unwrap();
       if (result?.success) {
-        const token = result.token;
-        axios.defaults.withCredentials = true;
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         toast.success("Login success");
+        console.log(result);
         navigate("/shop/home");
       }
     } catch (error) {
