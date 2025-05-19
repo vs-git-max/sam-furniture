@@ -65,7 +65,6 @@ export const checkAuthUserAction = createAsyncThunk(
       withCredentials: true,
       headers: {
         "Cache-control": "no-store, no-cache,must-validate,proxy-revalidate",
-        Expires: "0",
       },
     });
 
@@ -135,10 +134,10 @@ const authSlice = createSlice({
       .addCase(checkAuthUserAction.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(checkAuthUserAction.fulfilled, (state) => {
+      .addCase(checkAuthUserAction.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isAuthenticated = false;
-        state.user = null;
+        state.isAuthenticated = true;
+        state.user = action.payload.success;
       })
       .addCase(checkAuthUserAction.rejected, (state) => {
         state.isLoading = false;

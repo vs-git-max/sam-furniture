@@ -27,6 +27,7 @@ app.use(
       "Authorization",
       "Cache-Control",
       "Pragma",
+      "Expires",
     ],
     credentials: true,
   })

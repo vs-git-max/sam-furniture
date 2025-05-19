@@ -20,6 +20,13 @@ export const signupFormControls = [
     componentType: "input",
     type: "password",
   },
+  {
+    name: "password",
+    label: "Confirm Password",
+    placeholder: "Confirm your password...",
+    componentType: "input",
+    type: "password",
+  },
 ];
 
 const loginFormControls = [
@@ -36,6 +43,29 @@ const loginFormControls = [
     placeholder: "Enter your password...",
     componentType: "input",
     type: "password",
+  },
+];
+
+export const navItems = [
+  {
+    label: "Home",
+    id: "home",
+    link: "#home",
+  },
+  {
+    label: "Designs",
+    id: "designs",
+    link: "#designs",
+  },
+  {
+    label: "Latest Products",
+    id: "products",
+    link: "#products",
+  },
+  {
+    label: "Contact us",
+    id: "contact",
+    link: "#contact",
   },
 ];
 

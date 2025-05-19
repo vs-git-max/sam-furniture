@@ -17,7 +17,6 @@ const login = async (req, res) => {
       return res
         .status(401)
         .json({ success: false, message: "Enter a valid email" });
-    console.log("Email", email, "Password", password);
     const user = await User.findOne({ email });
     if (!user)
       return res
@@ -33,11 +32,14 @@ const login = async (req, res) => {
 
     generateTokenAndSetCookie(user._id, res);
 
-    res.status(200).json({
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      id: user._id,
+    return res.status(200).json({
+      success: true,
+      user: {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        id: user._id,
+      },
     });
   } catch (error) {
     console.log(`Error in the login  ${error}`);

@@ -1,7 +1,7 @@
 import Form from "@/components/common/FormControls";
 import React, { useState } from "react";
 import loginFormControls from "@/components/helper";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUserAction } from "@/components/store/auth/auth.slice";
 import { toast } from "sonner";
@@ -14,6 +14,7 @@ const Login = () => {
   };
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState(initialState);
   const onSubmit = async (e) => {
@@ -27,9 +28,9 @@ const Login = () => {
         axios.defaults.withCredentials = true;
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
         toast.success("Login success");
+        navigate("/shop/home");
       }
     } catch (error) {
-      console.log(`Error logging in ${error}`);
       toast.error(`Login failed, ${error}`);
     }
   };

@@ -30,6 +30,7 @@ const Form = ({
           <Input
             className="py-2 text-md font-medium"
             name={getControlItem.name}
+            autoComplete="off"
             placeholder={getControlItem.placeholder}
             value={value}
             id={getControlItem.name}

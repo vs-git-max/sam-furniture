@@ -4,7 +4,7 @@ import User from "../../models/userModel.js";
 
 const signup = async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, confirmPassword } = req.body;
 
     // Check if all fields are present
     if (!email || !password || !name) {
@@ -30,6 +30,14 @@ const signup = async (req, res) => {
         message: "User already exists with this email.",
       });
     }
+
+    if (password !== confirmPassword)
+      return res
+        .status(400)
+        .json({
+          message: "The password is not the same with the confirm password",
+          success: false,
+        });
 
     // Hash the password
     const hashedPassword = await hashPassword(password, 12);
