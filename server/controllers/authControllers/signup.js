@@ -1,5 +1,8 @@
 import { validateEmail } from "../../helpers/email.js";
-import { hashPassword } from "../../helpers/password.js";
+import {
+  checkPasswordComplexity,
+  hashPassword,
+} from "../../helpers/password.js";
 import User from "../../models/userModel.js";
 
 const signup = async (req, res) => {
@@ -31,13 +34,30 @@ const signup = async (req, res) => {
       });
     }
 
+    //password checks
+
     if (password !== confirmPassword)
+      return res.status(400).json({
+        message: "The password is not the same with the confirm password",
+        success: false,
+      });
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "Password length must be greater than 6",
+      });
+    }
+
+    const isPasswordOKay = checkPasswordComplexity(password);
+    if (!isPasswordOKay) {
       return res
         .status(400)
         .json({
-          message: "The password is not the same with the confirm password",
           success: false,
+          message: "Password must include an uppercase, lowercase and a number",
         });
+    }
 
     // Hash the password
     const hashedPassword = await hashPassword(password, 12);

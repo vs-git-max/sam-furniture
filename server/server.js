@@ -6,7 +6,8 @@ import cookieParser from "cookie-parser";
 
 // importing functions
 import connectToDb from "./database/db.js";
-import authRouters from "./routers/auth.router.js";
+import authRouters from "./routers/auth.routes.js";
+import productsRouters from "./routers/product.routes.js";
 
 //creating the app
 dotenv.config();
@@ -35,6 +36,7 @@ app.use(
 
 //using the functions
 app.use("/api/auth/", authRouters);
+app.use("/api/admin", productsRouters);
 
 //listening to the app
 app.listen(PORT, () => {
